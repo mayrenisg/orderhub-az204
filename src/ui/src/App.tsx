@@ -12,9 +12,9 @@ function App() {
   const [selectedOrderId, setSelectedOrderId] = useState<string>('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [message, setMessage] = useState<string>('');
-  const [health, setHealth] = useState<string>('Checking...');
+  //const [health, setHealth] = useState<string>('Checking...');
   
-  const fetchHealth = async () => {
+  /*const fetchHealth = async () => {
     try {
       const response = await fetch(`${apiBaseUrl}/health`);
       const data = await response.json();
@@ -22,7 +22,7 @@ function App() {
     } catch {
       setHealth('API unreachable');
     }
-  };
+  };*/
 
   const fetchOrders = async () => {
     const response = await fetch(`${apiBaseUrl}/orders`);
