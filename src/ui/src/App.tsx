@@ -12,7 +12,7 @@ function App() {
   const [selectedOrderId, setSelectedOrderId] = useState<string>('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [message, setMessage] = useState<string>('');
-  const [health, setHealth] = useState<string>('Checking...');
+  /*const [health, setHealth] = useState<string>('Checking...');
   
   const fetchHealth = async () => {
     try {
@@ -22,7 +22,7 @@ function App() {
     } catch {
       setHealth('API unreachable');
     }
-  };
+  };*/
 
   const fetchOrders = async () => {
     const response = await fetch(`${apiBaseUrl}/orders`);
@@ -54,7 +54,7 @@ function App() {
   };
   useEffect(() => {
     fetchOrders();
-    fetchHealth();
+    //fetchHealth();
   }, []);
   return (
     <div style={{ padding: '2rem', fontFamily: 'Arial' }}>
