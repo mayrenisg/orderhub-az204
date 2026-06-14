@@ -15,6 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.OrdersController = void 0;
 const common_1 = require("@nestjs/common");
 const orders_service_1 = require("./orders.service");
+const passport_1 = require("@nestjs/passport");
+const roles_guard_1 = require("../auth/guards/roles.guard");
+const roles_decorator_1 = require("../auth/decorators/roles.decorator");
 let OrdersController = class OrdersController {
     ordersService;
     constructor(ordersService) {
@@ -23,24 +26,28 @@ let OrdersController = class OrdersController {
     getOrders() {
         return this.ordersService.findAll();
     }
-    createOrder(body) {
+    create(body) {
         return this.ordersService.create(body);
     }
 };
 exports.OrdersController = OrdersController;
 __decorate([
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt'), roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)('admin', 'operator', 'viewer'),
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], OrdersController.prototype, "getOrders", null);
 __decorate([
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt'), roles_guard_1.RolesGuard),
     (0, common_1.Post)(),
+    (0, roles_decorator_1.Roles)('admin', 'operator'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
-], OrdersController.prototype, "createOrder", null);
+], OrdersController.prototype, "create", null);
 exports.OrdersController = OrdersController = __decorate([
     (0, common_1.Controller)('orders'),
     __metadata("design:paramtypes", [orders_service_1.OrdersService])
