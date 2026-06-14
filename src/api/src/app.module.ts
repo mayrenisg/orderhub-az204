@@ -15,7 +15,7 @@ import { AuthModule } from './auth/auth.module';
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
 
-    TypeOrmModule.forRoot({
+    /*TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
       port: Number(process.env.DB_PORT),
@@ -24,7 +24,7 @@ import { AuthModule } from './auth/auth.module';
       database: process.env.DB_NAME,
       autoLoadEntities: true,
       synchronize: true,
-    }),
+    }),*/
 
     OrdersModule,
     HealthModule,
