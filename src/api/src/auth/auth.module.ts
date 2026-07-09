@@ -7,13 +7,13 @@ import { AuthController } from './auth.controller';
 import { JwtStrategy } from './strategies/jwt.strategy';
 
 import { UserModule } from '../user/user.module';
+import { SecretsModule } from '../secrets/secrets.module';
 
 @Module({
   imports: [
     UserModule,
-
     PassportModule,
-
+    SecretsModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET,
       signOptions: {

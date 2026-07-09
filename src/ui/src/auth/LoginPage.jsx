@@ -7,18 +7,32 @@ export default function LoginPage({ apiBaseUrl, onLogin }) {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    const response = await fetch(`${apiBaseUrl}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    });
+const response = await fetch(`${apiBaseUrl}/auth/login`, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ email, password }),
+});
 
-    const data = await response.json();
+const text = await response.text();
 
-    console.log("LOGIN RESPONSE:", data);
+let data;
 
-    // 🔥 aquí avisas a App que el login fue exitoso
-    onLogin(data.accessToken, data.user);
+try {
+  data = JSON.parse(text);
+} catch {
+  console.error("Respuesta no JSON:", text);
+  return;
+}
+
+if (!response.ok) {
+  console.error("Login error:", data);
+  return;
+}
+
+console.log("LOGIN RESPONSE:", data);
+
+onLogin(data.accessToken, data.user);
+
   };
 
   return (

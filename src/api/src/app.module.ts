@@ -1,25 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-
-import { HealthModule } from './health/health.module';
-
-@Module({
-  imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
-    HealthModule,
-  ],
-})
-export class AppModule {}
-/*import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
+import { OrdersModule } from './orders/orders.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
-import { OrdersModule } from './orders/orders.module';
 import { HealthModule } from './health/health.module';
-import { FilesModule } from './files/files.module';
+import { SecretsModule } from './secrets/secrets.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 
@@ -27,7 +14,7 @@ import { AuthModule } from './auth/auth.module';
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
 
-    /*TypeOrmModule.forRoot({
+    TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
       port: Number(process.env.DB_PORT),
@@ -38,13 +25,13 @@ import { AuthModule } from './auth/auth.module';
       synchronize: true,
     }),
 
-    OrdersModule,
     HealthModule,
-    FilesModule,
+    SecretsModule,
     UserModule,
     AuthModule,
+    OrdersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}*/
+export class AppModule {}
