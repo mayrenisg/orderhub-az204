@@ -20,6 +20,15 @@ let AppController = class AppController {
     getHello() {
         return this.appService.getHello();
     }
+    throwError() {
+        throw new Error('Error controlado para validar Application Insights');
+    }
+    async slowRequest() {
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+        return {
+            message: 'Respuesta lenta simulada',
+        };
+    }
 };
 exports.AppController = AppController;
 __decorate([
@@ -28,6 +37,18 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", String)
 ], AppController.prototype, "getHello", null);
+__decorate([
+    (0, common_1.Get)('debug/error'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], AppController.prototype, "throwError", null);
+__decorate([
+    (0, common_1.Get)('debug/slow'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], AppController.prototype, "slowRequest", null);
 exports.AppController = AppController = __decorate([
     (0, common_1.Controller)(),
     __metadata("design:paramtypes", [app_service_1.AppService])

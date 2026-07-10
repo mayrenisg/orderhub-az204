@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { Order } from './orders.entity';
 import { AuthGuard } from '@nestjs/passport';
@@ -19,7 +19,7 @@ export class OrdersController {
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Post()
   @Roles('admin','operator')
-  create(@Body() body: Partial<Order>) {
-    return this.ordersService.create(body);
+  create(@Body() body: Partial<Order>, @Req() req) {
+    return this.ordersService.create(body, req.user);
   }
 }

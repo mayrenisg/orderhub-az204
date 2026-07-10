@@ -1,38 +1,36 @@
 import { useState } from 'react';
+import { useAuth } from './AuthContext';
 
-export default function LoginPage({ apiBaseUrl, onLogin }) {
+export default function LoginPage({ apiBaseUrl }) {
+  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
-const response = await fetch(`${apiBaseUrl}/auth/login`, {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ email, password }),
-});
+    const response = await fetch(`${apiBaseUrl}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
 
-const text = await response.text();
+    const text = await response.text();
 
-let data;
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      console.error('Respuesta no JSON:', text);
+      return;
+    }
 
-try {
-  data = JSON.parse(text);
-} catch {
-  console.error("Respuesta no JSON:", text);
-  return;
-}
+    if (!response.ok) {
+      console.error('Login error:', data);
+      return;
+    }
 
-if (!response.ok) {
-  console.error("Login error:", data);
-  return;
-}
-
-console.log("LOGIN RESPONSE:", data);
-
-onLogin(data.accessToken, data.user);
-
+    login(data.accessToken, data.user);
   };
 
   return (

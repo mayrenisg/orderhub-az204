@@ -3,14 +3,14 @@ import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 @Entity()
 export class Order {
     @PrimaryGeneratedColumn()
-    id: number;
+    id!: number;
 
     @Column()
-    customerId: string;
+    customerId?: string;
 
     @Column('decimal', { precision: 10, scale: 2 })
-    total: number;
+    total?: number;
 
     @Column()
-    status: string;
+    status?: string;
 }

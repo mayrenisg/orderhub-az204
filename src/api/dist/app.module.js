@@ -17,6 +17,9 @@ const health_module_1 = require("./health/health.module");
 const secrets_module_1 = require("./secrets/secrets.module");
 const user_module_1 = require("./user/user.module");
 const auth_module_1 = require("./auth/auth.module");
+const audit_module_1 = require("./audit/audit.module");
+const files_module_1 = require("./files/files.module");
+const queue_module_1 = require("./queue/queue.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -25,20 +28,27 @@ exports.AppModule = AppModule = __decorate([
         imports: [
             config_1.ConfigModule.forRoot({ isGlobal: true }),
             typeorm_1.TypeOrmModule.forRoot({
-                type: 'postgres',
+                type: 'mssql',
                 host: process.env.DB_HOST,
-                port: Number(process.env.DB_PORT),
+                port: Number(process.env.DB_PORT || 1433),
                 username: process.env.DB_USERNAME,
                 password: process.env.DB_PASSWORD,
                 database: process.env.DB_NAME,
                 autoLoadEntities: true,
                 synchronize: true,
+                options: {
+                    encrypt: true,
+                    trustServerCertificate: false,
+                },
             }),
             health_module_1.HealthModule,
             secrets_module_1.SecretsModule,
             user_module_1.UserModule,
             auth_module_1.AuthModule,
             orders_module_1.OrdersModule,
+            audit_module_1.AuditModule,
+            files_module_1.FilesModule,
+            queue_module_1.QueueModule
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

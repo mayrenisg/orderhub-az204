@@ -11,29 +11,62 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var OrdersService_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OrdersService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const orders_entity_1 = require("./orders.entity");
 const typeorm_2 = require("typeorm");
-let OrdersService = class OrdersService {
+const audit_service_1 = require("../audit/audit.service");
+const queue_service_1 = require("../queue/queue.service");
+let OrdersService = OrdersService_1 = class OrdersService {
     orderRepository;
-    constructor(orderRepository) {
+    auditService;
+    queueService;
+    logger = new common_1.Logger(OrdersService_1.name);
+    constructor(orderRepository, auditService, queueService) {
         this.orderRepository = orderRepository;
+        this.auditService = auditService;
+        this.queueService = queueService;
     }
-    create(orderDto) {
-        const order = this.orderRepository.create(orderDto);
-        return this.orderRepository.save(order);
+    async create(order, user) {
+        try {
+            const savedOrder = await this.orderRepository.save(order);
+            await this.queueService.sendOrderCreated(savedOrder.id);
+            await this.auditService.recordEvent({
+                orderId: savedOrder.id.toString(),
+                type: 'ORDER_CREATED',
+                userEmail: user?.email,
+                data: {
+                    customerId: savedOrder.customerId,
+                    total: savedOrder.total,
+                    status: savedOrder.status,
+                },
+            });
+            this.logger.log(`Order created with id ${savedOrder.id}`);
+            return savedOrder;
+        }
+        catch (error) {
+            if (error instanceof Error) {
+                this.logger.error('Error creating order', error.stack);
+            }
+            else {
+                this.logger.error('Error creating order', String(error));
+            }
+            throw error;
+        }
     }
     findAll() {
         return this.orderRepository.find();
     }
 };
 exports.OrdersService = OrdersService;
-exports.OrdersService = OrdersService = __decorate([
+exports.OrdersService = OrdersService = OrdersService_1 = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(orders_entity_1.Order)),
-    __metadata("design:paramtypes", [typeorm_2.Repository])
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        audit_service_1.AuditService,
+        queue_service_1.QueueService])
 ], OrdersService);
 //# sourceMappingURL=orders.service.js.map

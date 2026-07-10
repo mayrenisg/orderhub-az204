@@ -28,5 +28,6 @@ import { SecretsModule } from '../secrets/secrets.module';
   ],
 
   controllers: [AuthController],
+  exports: [AuthService],
 })
 export class AuthModule {}
