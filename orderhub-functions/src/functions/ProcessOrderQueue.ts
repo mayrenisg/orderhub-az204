@@ -2,17 +2,15 @@ import { app, InvocationContext } from "@azure/functions";
 import { updateOrderStatus } from "../db";
 
 export async function ProcessOrderQueue(
-  message: unknown,
+  message: { orderId: number },
   context: InvocationContext
 ): Promise<void> {
 
-  const order = JSON.parse(message as string);
+  context.log("Processing order", message);
 
-  context.log("Processing order", order);
+  await updateOrderStatus(message.orderId);
 
-  await updateOrderStatus(order.orderId);
-
-  context.log(`Order ${order.orderId} updated to Processed`);
+  context.log(`Order ${message.orderId} updated to Processed`);
 }
 
 app.storageQueue("ProcessOrderQueue", {
