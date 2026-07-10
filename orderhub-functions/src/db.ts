@@ -16,7 +16,7 @@ export async function updateOrderStatus(orderId: number) {
     .request()
     .input('id', sql.Int, orderId)
     .query(`
-      UPDATE order
+      UPDATE [order]
       SET status = 'Processed'
       WHERE id = @id
     `);
