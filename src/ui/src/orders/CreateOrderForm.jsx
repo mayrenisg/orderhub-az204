@@ -46,13 +46,13 @@ export default function CreateOrderForm({
 
       <div className="form-section-body">
         <div className="form-row">
-          <label className="form-label" htmlFor="order-customer">Cliente</label>
+          <label className="form-label" htmlFor="order-customer">ID del Cliente</label>
           <input
             id="order-customer"
             className="form-input"
             value={customerId}
             onChange={(e) => setCustomerId(e.target.value)}
-            placeholder="Nombre del cliente"
+            placeholder="ID del cliente"
           />
         </div>
 
