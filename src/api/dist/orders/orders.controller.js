@@ -29,6 +29,9 @@ let OrdersController = class OrdersController {
     create(body, req) {
         return this.ordersService.create(body, req.user);
     }
+    getAttachments(id) {
+        return this.ordersService.getAttachments(Number(id));
+    }
 };
 exports.OrdersController = OrdersController;
 __decorate([
@@ -49,6 +52,15 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", void 0)
 ], OrdersController.prototype, "create", null);
+__decorate([
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt'), roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)('admin', 'operator', 'viewer'),
+    (0, common_1.Get)(':id/attachments'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", void 0)
+], OrdersController.prototype, "getAttachments", null);
 exports.OrdersController = OrdersController = __decorate([
     (0, common_1.Controller)('orders'),
     __metadata("design:paramtypes", [orders_service_1.OrdersService])

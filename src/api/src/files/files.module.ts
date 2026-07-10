@@ -7,6 +7,6 @@ import { AuditModule } from 'src/audit/audit.module';
   controllers: [FilesController],
   providers: [FilesService],
   exports: [FilesService],
-  imports: [AuditModule], // Import the AuditModule to use its services in the FilesModule
+  imports: [AuditModule], // 
 })
 export class FilesModule {}

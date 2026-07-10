@@ -98,6 +98,7 @@ export class FilesService {
     for await (const blob of containerClient.listBlobsFlat({ prefix })) {
       files.push({
         name: blob.name,
+        fileName: blob.name.split('/').pop(),
         url: containerClient.getBlockBlobClient(blob.name).url,
         size: blob.properties.contentLength,
         contentType: blob.properties.contentType,

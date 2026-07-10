@@ -1,9 +1,10 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Order } from './orders.entity';
 import { Repository } from 'typeorm';
 import { AuditService } from 'src/audit/audit.service';
 import { QueueService } from 'src/queue/queue.service';
+import { FilesService } from 'src/files/files.service';
 
 @Injectable()
 export class OrdersService {
@@ -13,6 +14,7 @@ constructor(
   private readonly orderRepository: Repository<Order>,
   private readonly auditService: AuditService,
   private readonly queueService: QueueService,
+  private readonly filesService: FilesService,
 ) {}
 
 async create(order: Partial<Order>, user: any) {
@@ -48,5 +50,17 @@ async create(order: Partial<Order>, user: any) {
     findAll() {
       return this.orderRepository.find();
     }
+
+     async getAttachments(orderId: number) {
+    const order = await this.orderRepository.findOne({
+      where: { id: orderId },
+    });
+
+    if (!order) {
+      throw new NotFoundException('Order not found');
+    }
+
+    return this.filesService.listFiles(orderId.toString());
+  }
 
 }

@@ -5,9 +5,10 @@ import { Order } from './orders.entity';
 import { TypeOrmModule } from '@nestjs/typeorm/dist/typeorm.module';
 import { AuditModule } from 'src/audit/audit.module';
 import { QueueModule } from 'src/queue/queue.module';
+import { FilesModule } from 'src/files/files.module';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Order]),AuditModule, QueueModule],
+    imports: [TypeOrmModule.forFeature([Order]),AuditModule, QueueModule, FilesModule],
   controllers: [OrdersController],
   providers: [OrdersService]
 })

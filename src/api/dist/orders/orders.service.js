@@ -20,15 +20,18 @@ const orders_entity_1 = require("./orders.entity");
 const typeorm_2 = require("typeorm");
 const audit_service_1 = require("../audit/audit.service");
 const queue_service_1 = require("../queue/queue.service");
+const files_service_1 = require("../files/files.service");
 let OrdersService = OrdersService_1 = class OrdersService {
     orderRepository;
     auditService;
     queueService;
+    filesService;
     logger = new common_1.Logger(OrdersService_1.name);
-    constructor(orderRepository, auditService, queueService) {
+    constructor(orderRepository, auditService, queueService, filesService) {
         this.orderRepository = orderRepository;
         this.auditService = auditService;
         this.queueService = queueService;
+        this.filesService = filesService;
     }
     async create(order, user) {
         try {
@@ -60,6 +63,15 @@ let OrdersService = OrdersService_1 = class OrdersService {
     findAll() {
         return this.orderRepository.find();
     }
+    async getAttachments(orderId) {
+        const order = await this.orderRepository.findOne({
+            where: { id: orderId },
+        });
+        if (!order) {
+            throw new common_1.NotFoundException('Order not found');
+        }
+        return this.filesService.listFiles(orderId.toString());
+    }
 };
 exports.OrdersService = OrdersService;
 exports.OrdersService = OrdersService = OrdersService_1 = __decorate([
@@ -67,6 +79,7 @@ exports.OrdersService = OrdersService = OrdersService_1 = __decorate([
     __param(0, (0, typeorm_1.InjectRepository)(orders_entity_1.Order)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
         audit_service_1.AuditService,
-        queue_service_1.QueueService])
+        queue_service_1.QueueService,
+        files_service_1.FilesService])
 ], OrdersService);
 //# sourceMappingURL=orders.service.js.map

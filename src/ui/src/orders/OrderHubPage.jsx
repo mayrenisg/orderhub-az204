@@ -3,14 +3,17 @@ import { useAuth } from '../auth/AuthContext';
 import CreateOrderForm from './CreateOrderForm';
 import OrderHistory from './OrderHistory';
 import FileUpload from './FileUpload';
+import OrderAttachments from './OrderAttachments';
 
 export default function OrderHubPage({ apiBaseUrl }) {
   const { token, user, logout } = useAuth();
 
   const [orders, setOrders] = useState([]);
 
-  const [selectedOrderId, setSelectedOrderId] = useState(null);
-  const [uploadOrderId, setUploadOrderId] = useState(null);
+ const [expandedSection, setExpandedSection] = useState({
+  type: null,
+  orderId: null,
+});
 
   const fetchOrders = async () => {
     if (!token) return;
@@ -40,6 +43,24 @@ export default function OrderHubPage({ apiBaseUrl }) {
     user?.role === 'admin' || user?.role === 'operator';
 
   const statusClass = (status) => (status || '').toLowerCase();
+
+
+  const toggleSection = (type, orderId) => {
+  if (
+    expandedSection.type === type &&
+    expandedSection.orderId === orderId
+  ) {
+    setExpandedSection({
+      type: null,
+      orderId: null,
+    });
+  } else {
+    setExpandedSection({
+      type,
+      orderId,
+    });
+  }
+};
 
   return (
     <div className="app-layout">
@@ -88,39 +109,77 @@ export default function OrderHubPage({ apiBaseUrl }) {
               </div>
 
               <div className="order-card-actions">
-                <button className="btn btn-sm" onClick={() => setSelectedOrderId(
-                  selectedOrderId === order.id ? null : order.id
-                )}>
-                  {selectedOrderId === order.id ? '▼ Ocultar historial' : '▶ Ver historial'}
-                </button>
+                <button 
+  className="btn btn-sm"
+  onClick={() => toggleSection('history', order.id)}
+>
+  {expandedSection.type === 'history' &&
+   expandedSection.orderId === order.id
+    ? '▼ Ocultar historial'
+    : '▶ Ver historial'}
+</button>
 
-                <button className="btn btn-sm" onClick={() => setUploadOrderId(
-                  uploadOrderId === order.id ? null : order.id
-                )}>
-                  {uploadOrderId === order.id ? '✕ Cancelar' : '📎 Adjuntar'}
-                </button>
+                <button
+  className="btn btn-sm"
+  onClick={() => toggleSection('attachments', order.id)}
+>
+  {expandedSection.type === 'attachments' &&
+   expandedSection.orderId === order.id
+    ? '✕ Ocultar adjuntos'
+    : '📂 Ver adjuntos'}
+</button>
+
+                <button
+  className="btn btn-sm"
+  onClick={() => toggleSection('upload', order.id)}
+>
+  {expandedSection.type === 'upload' &&
+   expandedSection.orderId === order.id
+    ? '✕ Cancelar'
+    : '📎 Adjuntar'}
+</button>
               </div>
 
-              {selectedOrderId === order.id && (
-                <div className="order-card-expanded fade-in">
-                  <OrderHistory
-                    apiBaseUrl={apiBaseUrl}
-                    token={token}
-                    selectedOrderId={selectedOrderId}
-                  />
-                </div>
-              )}
+              {expandedSection.type === 'history' &&
+ expandedSection.orderId === order.id && (
+  <div className="order-card-expanded fade-in">
+    <OrderHistory
+      apiBaseUrl={apiBaseUrl}
+      token={token}
+      selectedOrderId={order.id}
+    />
+  </div>
+)}
 
-              {uploadOrderId === order.id && (
-                <div className="order-card-expanded fade-in">
-                  <FileUpload
-                    apiBaseUrl={apiBaseUrl}
-                    token={token}
-                    orderId={uploadOrderId}
-                    onUploadComplete={() => setUploadOrderId(null)}
-                  />
-                </div>
-              )}
+
+{expandedSection.type === 'upload' &&
+ expandedSection.orderId === order.id && (
+  <div className="order-card-expanded fade-in">
+    <FileUpload
+      apiBaseUrl={apiBaseUrl}
+      token={token}
+      orderId={order.id}
+      onUploadComplete={() =>
+        setExpandedSection({
+          type: null,
+          orderId: null,
+        })
+      }
+    />
+  </div>
+)}
+
+
+{expandedSection.type === 'attachments' &&
+ expandedSection.orderId === order.id && (
+  <div className="order-card-expanded fade-in">
+    <OrderAttachments
+      apiBaseUrl={apiBaseUrl}
+      token={token}
+      orderId={order.id}
+    />
+  </div>
+)}
             </div>
           ))}
 

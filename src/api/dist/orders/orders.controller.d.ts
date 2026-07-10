@@ -5,4 +5,5 @@ export declare class OrdersController {
     constructor(ordersService: OrdersService);
     getOrders(): Promise<Order[]>;
     create(body: Partial<Order>, req: any): Promise<Partial<Order> & Order>;
+    getAttachments(id: number): Promise<any[]>;
 }
