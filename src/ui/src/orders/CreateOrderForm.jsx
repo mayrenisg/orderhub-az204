@@ -41,32 +41,53 @@ export default function CreateOrderForm({
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h3>Crear nueva orden</h3>
+    <form className="form-section" onSubmit={handleSubmit}>
+      <div className="form-section-title">Crear nueva orden</div>
 
-      <input
-        value={customerId}
-        onChange={(e) => setCustomerId(e.target.value)}
-        placeholder="Cliente"
-      />
+      <div className="form-section-body">
+        <div className="form-row">
+          <label className="form-label" htmlFor="order-customer">Cliente</label>
+          <input
+            id="order-customer"
+            className="form-input"
+            value={customerId}
+            onChange={(e) => setCustomerId(e.target.value)}
+            placeholder="Nombre del cliente"
+          />
+        </div>
 
-      <input
-        value={total}
-        onChange={(e) => setTotal(e.target.value)}
-        placeholder="Total"
-        type="number"
-      />
+        <div className="form-row">
+          <label className="form-label" htmlFor="order-total">Total</label>
+          <input
+            id="order-total"
+            className="form-input"
+            value={total}
+            onChange={(e) => setTotal(e.target.value)}
+            placeholder="0.00"
+            type="number"
+            step="0.01"
+            min="0"
+          />
+        </div>
 
-      <select
-        value={status}
-        onChange={(e) => setStatus(e.target.value)}
-      >
-        <option value="Pending">Pending</option>
-        <option value="Processing">Processing</option>
-        <option value="Completed">Completed</option>
-      </select>
+        <div className="form-row">
+          <label className="form-label" htmlFor="order-status">Estado</label>
+          <select
+            id="order-status"
+            className="form-select"
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+          >
+            <option value="Pending">Pending</option>
+            <option value="Processing">Processing</option>
+            <option value="Completed">Completed</option>
+          </select>
+        </div>
+      </div>
 
-      <button type="submit">Crear orden</button>
+      <div className="form-actions">
+        <button className="btn btn-primary" type="submit">Crear orden</button>
+      </div>
     </form>
   );
 }

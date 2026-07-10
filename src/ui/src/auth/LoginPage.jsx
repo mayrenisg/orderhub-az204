@@ -34,23 +34,38 @@ export default function LoginPage({ apiBaseUrl }) {
   };
 
   return (
-    <form onSubmit={handleLogin}>
-      <h2>Login</h2>
+    <div className="login-container">
+      <div className="login-card">
+        <h1 className="login-title">OrderHub</h1>
+        <p className="login-subtitle">Inicia sesión para continuar</p>
 
-      <input
-        placeholder="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
+        <form className="login-form" onSubmit={handleLogin}>
+          <div className="login-field">
+            <label className="login-label" htmlFor="login-email">Correo electrónico</label>
+            <input
+              id="login-email"
+              className="login-input"
+              placeholder="tu@correo.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
 
-      <input
-        type="password"
-        placeholder="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
+          <div className="login-field">
+            <label className="login-label" htmlFor="login-password">Contraseña</label>
+            <input
+              id="login-password"
+              className="login-input"
+              type="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
 
-      <button type="submit">Iniciar sesión</button>
-    </form>
+          <button className="login-btn" type="submit">Iniciar sesión</button>
+        </form>
+      </div>
+    </div>
   );
 }

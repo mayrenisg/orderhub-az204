@@ -11,13 +11,25 @@ export default function OrderHistory({ apiBaseUrl, token, selectedOrderId }) {
       .catch(console.error);
   }, [selectedOrderId]);
   return (
-    <section>
-      <h3>Historial de la orden</h3>
-      {events.map((event) => (
-        <div key={event.id}>
-          <strong>{event.type}</strong> - {event.createdAt}
+    <section className="order-history">
+      <h3 className="order-history-title">Historial de la orden</h3>
+      {events.length === 0 ? (
+        <p className="order-history-empty">No hay eventos registrados</p>
+      ) : (
+        <div className="order-history-timeline">
+          {events.map((event) => (
+            <div key={event.id} className="order-history-event">
+              <div className="order-history-dot">
+                <div className="order-history-dot-inner" />
+              </div>
+              <div className="order-history-content">
+                <div className="order-history-type">{event.type}</div>
+                <div className="order-history-date">{event.createdAt}</div>
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
+      )}
     </section>
   );
 }

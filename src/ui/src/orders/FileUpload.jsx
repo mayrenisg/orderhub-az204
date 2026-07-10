@@ -38,22 +38,32 @@ export default function FileUpload({ apiBaseUrl, token, orderId }) {
 
 
   return (
-    <div>
-
-      <h3>
+    <div className="file-upload">
+      <h3 className="file-upload-title">
         Adjuntar documento a orden #{orderId}
       </h3>
 
-      <input
-        type="file"
-        onChange={(e) => setFile(e.target.files[0])}
-      />
+      <div className="file-upload-dropzone">
+        <input
+          id="file-input"
+          type="file"
+          onChange={(e) => setFile(e.target.files[0])}
+          style={{ display: 'none' }}
+        />
+        <label htmlFor="file-input" className="file-upload-dropzone-text" style={{ cursor: 'pointer', display: 'block' }}>
+          {file ? (
+            <span className="file-upload-name">{file.name}</span>
+          ) : (
+            'Haz clic para seleccionar un archivo'
+          )}
+        </label>
+      </div>
 
-
-      <button onClick={uploadFile}>
-        Subir documento
-      </button>
-
+      <div className="file-upload-actions">
+        <button className="btn btn-primary" onClick={uploadFile}>
+          Subir documento
+        </button>
+      </div>
     </div>
   );
 }

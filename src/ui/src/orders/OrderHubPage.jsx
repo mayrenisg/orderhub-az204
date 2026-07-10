@@ -39,70 +39,107 @@ export default function OrderHubPage({ apiBaseUrl }) {
   const canCreateOrders =
     user?.role === 'admin' || user?.role === 'operator';
 
-  return (
-    <div>
-      <header>
-        <h1>OrderHub</h1>
-        <p>
-          {user?.email} ({user?.role})
-        </p>
+  const statusClass = (status) => (status || '').toLowerCase();
 
-        <button onClick={logout}>
-          Cerrar sesión
-        </button>
+  return (
+    <div className="app-layout">
+      <header className="app-header">
+        <div className="app-header-inner">
+          <h1>OrderHub</h1>
+          <div className="app-header-info">
+            <span className="app-header-user">
+              {user?.email}
+              <span className="app-header-role">{user?.role}</span>
+            </span>
+            <button className="btn btn-danger btn-sm" onClick={logout}>
+              Cerrar sesión
+            </button>
+          </div>
+        </div>
       </header>
 
-      <h2>Órdenes</h2>
-
-      <button onClick={fetchOrders}>
-        Refrescar órdenes
-      </button>
-
-      {orders.map((order) => (
-        <div key={order.id}>
-          <p>Orden #{order.id}</p>
-          <p>Cliente: {order.customerId}</p>
-          <p>Total: ${order.total}</p>
-          <p>Estado: <strong>{order.status}</strong></p>
-
-          <button onClick={() => setSelectedOrderId(
-            selectedOrderId === order.id ? null : order.id
-          )}>
-            {selectedOrderId === order.id ? 'Ocultar historial' : 'Ver historial'}
+      <main className="app-main">
+        <div className="orders-header">
+          <h2>Órdenes</h2>
+          <button className="btn btn-primary" onClick={fetchOrders}>
+            ↻ Refrescar
           </button>
+        </div>
 
-          <button onClick={() => setUploadOrderId(
-            uploadOrderId === order.id ? null : order.id
-          )}>
-            {uploadOrderId === order.id ? 'Cancelar' : 'Adjuntar archivo'}
-          </button>
+        <div className="orders-grid">
+          {orders.map((order) => (
+            <div key={order.id} className="order-card fade-in">
+              <div className="order-card-header">
+                <span className="order-card-id">Orden #{order.id}</span>
+                <span className={`status-badge ${statusClass(order.status)}`}>
+                  {order.status}
+                </span>
+              </div>
 
-          {selectedOrderId === order.id && (
-            <OrderHistory
-              apiBaseUrl={apiBaseUrl}
-              token={token}
-              selectedOrderId={selectedOrderId}
-            />
-          )}
+              <div className="order-card-body">
+                <div className="order-card-row">
+                  <span className="order-card-label">Cliente</span>
+                  <span className="order-card-value">{order.customerId}</span>
+                </div>
+                <div className="order-card-row">
+                  <span className="order-card-label">Total</span>
+                  <span className="order-card-value total">${order.total}</span>
+                </div>
+              </div>
 
-          {uploadOrderId === order.id && (
-            <FileUpload
-              apiBaseUrl={apiBaseUrl}
-              token={token}
-              orderId={uploadOrderId}
-              onUploadComplete={() => setUploadOrderId(null)}
-            />
+              <div className="order-card-actions">
+                <button className="btn btn-sm" onClick={() => setSelectedOrderId(
+                  selectedOrderId === order.id ? null : order.id
+                )}>
+                  {selectedOrderId === order.id ? '▼ Ocultar historial' : '▶ Ver historial'}
+                </button>
+
+                <button className="btn btn-sm" onClick={() => setUploadOrderId(
+                  uploadOrderId === order.id ? null : order.id
+                )}>
+                  {uploadOrderId === order.id ? '✕ Cancelar' : '📎 Adjuntar'}
+                </button>
+              </div>
+
+              {selectedOrderId === order.id && (
+                <div className="order-card-expanded fade-in">
+                  <OrderHistory
+                    apiBaseUrl={apiBaseUrl}
+                    token={token}
+                    selectedOrderId={selectedOrderId}
+                  />
+                </div>
+              )}
+
+              {uploadOrderId === order.id && (
+                <div className="order-card-expanded fade-in">
+                  <FileUpload
+                    apiBaseUrl={apiBaseUrl}
+                    token={token}
+                    orderId={uploadOrderId}
+                    onUploadComplete={() => setUploadOrderId(null)}
+                  />
+                </div>
+              )}
+            </div>
+          ))}
+
+          {orders.length === 0 && (
+            <div className="empty-state">
+              <div className="empty-state-icon">📋</div>
+              <p className="empty-state-text">No hay órdenes disponibles</p>
+            </div>
           )}
         </div>
-      ))}
 
-      {canCreateOrders && (
-        <CreateOrderForm
-          apiBaseUrl={apiBaseUrl}
-          token={token}
-          onOrderCreated={fetchOrders}
-        />
-      )}
+        {canCreateOrders && (
+          <CreateOrderForm
+            apiBaseUrl={apiBaseUrl}
+            token={token}
+            onOrderCreated={fetchOrders}
+          />
+        )}
+      </main>
     </div>
   );
 }
